@@ -1,0 +1,66 @@
+#groupChat {
+    width: 60%;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background: #ccc1c1;
+
+}
+
+body {
+    background: url('https://images.pexels.com/photos/1666021/pexels-photo-1666021.jpeg?cs=srgb&dl=conifers-daylight-environment-1666021.jpg&fm=jpg') no-repeat center center/cover; /* Set background */
+}
+
+#chatWindow {
+    height: 400px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.message {
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: 60%;
+    display: inline-block;
+    word-wrap: break-word;
+}
+
+.sent {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    text-align: right;
+    margin-left: auto;
+}
+
+.received {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    align-self: flex-start;
+    text-align: left;
+}
+
+.delete-checkbox {
+    margin: 0 10px;
+}
+
+#chatInput {
+    display: flex;
+    margin-top: 10px;
+}
+
+#messageInput {
+    flex-grow: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

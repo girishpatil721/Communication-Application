@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <title>Managed User</title>
+
+  <style>
+    .table-container {
+      width: 95%;
+      margin: 20px auto;
+      overflow-x: auto;
+    }
+
+    .table {
+      width: 100%;
+      min-width: 600px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary h-500">
+    <div class="container-fluid p-0">
+      <div class="d-flex w-100">
+        <a class="btn btn-secondary flex-fill border d-flex align-items-center justify-content-center"
+          href="./welcomePage.html">Home</a>
+        <a class="btn btn-secondary flex-fill border d-flex align-items-center justify-content-center"
+          href="../GroupChat/groupchat.html">Group Chat</a>
+        <a class="btn btn-secondary flex-fill border d-flex align-items-center justify-content-center"
+          href="./managedUser.html">Manage Users</a>
+        <a class="btn btn-secondary flex-fill border d-flex align-items-center justify-content-center"
+          href="./managedDoc.html">Manage Documents</a>
+        <button class="btn btn-secondary flex-fill border d-flex align-items-center justify-content-center"
+          onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+  <div>
+    <h2 class="text-center">User List</h2>
+    <h3 class="text-center" id="loggedInUserName"></h3>
+  </div>
+  <div class="table-container">
+    <table class="table table-striped table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="documentList"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    // Display logged-in user name
+    if (loggedInUser) {
+      document.getElementById("loggedInUserName").textContent = `Logged in as: ${loggedInUser.fullName}`;
+    }
+
+    // Generates a 3-digit random number (10000-99900)
+    function generateRandomID() {
+      return Math.floor(10000 + Math.random() * 90000);
+    }
+
+    let storedUploads = JSON.parse(localStorage.getItem("users")) || [];
+
+    storedUploads = storedUploads.map((user) => {
+      if (!user.id) {
+        user.id = generateRandomID();
+      }
+      return user;
+    });
+
+    localStorage.setItem("users", JSON.stringify(storedUploads));
+    let documentList = document.getElementById("documentList");
+
+    function renderUsers() {
+      documentList.innerHTML = ""; // Clear existing rows
+      let loggedInUser = JSON.parse(localStorage.getItem("loggedInUser")); // Get logged-in user
+
+      storedUploads.forEach((user, index) => {
+        let deleteButton =
+          loggedInUser && loggedInUser.email === user.email
+            ? "" // Hide delete button if logged-in user is the same
+            : `<button class="btn btn-sm btn-danger" onclick="deleteUser(${index})">Delete</button>`;
+
+        let row = `<tr>
+                    <td>${user.id}</td>
+                    <td><span id="name-${index}">${user.fullName}</span></td>
+                    <td><span id="email-${index}">${user.email}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editUser(${user.id})">Edit</button>
+                        ${deleteButton}
+                    </td>
+                </tr>`;
+                document.getElementById("loggedInUserName").textContent = `Logged in as: ${loggedInUser.fullName}`;
+        documentList.innerHTML += row;
+      });
+    }
+
+    function editUser(userId) {
+      window.location.href = `editpage.html?id=${userId}`;
+    }
+
+    function deleteUser(index) {
+      if (confirm("Are you sure you want to delete this user?")) {
+        storedUploads.splice(index, 1);
+
+        localStorage.setItem("users", JSON.stringify(storedUploads));
+        renderUsers();
+      }
+    }
+
+    renderUsers();
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem("loggedInUser"); // Clear logged-in user data
+      window.location.href = "../Login/login.html"; // Redirect to login page
+    }
+  </script>
+</body>
+
+</html>
